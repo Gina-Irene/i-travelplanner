@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Galerie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .gallery-filters {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line-light);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(250, 246, 238, 0.92);
+    }
+    .gallery-filters .inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 16px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid var(--line);
+      color: var(--ink-700);
+      cursor: pointer;
+      transition: all 0.25s;
+      background: transparent;
+    }
+    .chip:hover { border-color: var(--navy-900); color: var(--navy-900); }
+    .chip.is-active { background: var(--navy-900); color: var(--sand-50); border-color: var(--navy-900); }
+    .gallery-count {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .gallery {
+      padding: var(--space-7) 0 var(--space-10);
+      background: var(--sand-50);
+    }
+    .masonry {
+      column-count: 3;
+      column-gap: 16px;
+    }
+    @media (max-width: 900px) { .masonry { column-count: 2; } }
+    @media (max-width: 540px) { .masonry { column-count: 1; } }
+    .tile {
+      break-inside: avoid;
+      margin-bottom: 16px;
+      display: block;
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--navy-900);
+    }
+    .tile img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.8s cubic-bezier(.6,.2,.2,1);
+    }
+    .tile:hover img { transform: scale(1.05); }
+    .tile::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(6,26,48,0.75));
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .tile:hover::after { opacity: 1; }
+    .tile .caption {
+      position: absolute;
+      left: 20px; bottom: 20px;
+      z-index: 2;
+      color: white;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 17px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .tile:hover .caption { opacity: 1; transform: translateY(0); }
+    .tile .tile-tag {
+      position: absolute;
+      top: 14px; left: 14px;
+      z-index: 2;
+      padding: 5px 12px;
+      background: rgba(13,42,71,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.18);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tile:hover .tile-tag { opacity: 1; }
+    .tile .zoom {
+      position: absolute;
+      top: 14px; right: 14px;
+      z-index: 2;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      color: var(--navy-900);
+      display: grid; place-items: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.3s;
+    }
+    .tile:hover .zoom { opacity: 1; transform: scale(1); }
+
+    .tile.is-hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero Galerie" style="min-height:55vh">
+    <div class="art" data-art="gallery"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>Galerie</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">Souvenirs partagés</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>Instants</span></span><br/>
+        <span class="split-line"><span class="h-italic">de voyage.</span></span>
+      </h1>
+      <p class="lead mt-6" data-hero-fade>
+        Une sélection de moments capturés par nos voyageurs et notre équipe —
+        des baobabs malgaches aux gratte-ciels de Dubaï, des palais de Pékin
+        aux lagons mauriciens.
+      </p>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <div class="gallery-filters">
+    <div class="container">
+      <div class="inner">
+        <div class="filter-chips" id="chips">
+          <button class="chip is-active" data-filter="all">Tout</button>
+          <button class="chip" data-filter="mada">Madagascar</button>
+          <button class="chip" data-filter="dubai">Dubaï</button>
+          <button class="chip" data-filter="chine">Chine</button>
+          <button class="chip" data-filter="iles">Îles</button>
+        </div>
+        <span class="gallery-count" id="gallery-count">33 photos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery masonry -->
+  <section class="gallery">
+    <div class="container">
+      <div class="masonry" data-reveal-group>
+
+        <!-- ===== Madagascar ===== -->
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/morondava.jpg" data-caption="Avenue des Baobabs, Morondava" data-reveal-item>
+          <img src="uploads/morondava.jpg" alt="Avenue des Baobabs" loading="lazy"/>
+          <span class="tile-tag">Morondava</span>
+          <span class="caption">Avenue des Baobabs au crépuscule</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/nosybe.jpg" data-caption="Lagons turquoise de Nosy Be" data-reveal-item>
+          <img src="uploads/nosybe.jpg" alt="Nosy Be" loading="lazy"/>
+          <span class="tile-tag">Nosy Be</span>
+          <span class="caption">Lagons turquoise de Nosy Be</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/diegosuarez.jpg" data-caption="Plage de Diego Suarez" data-reveal-item>
+          <img src="uploads/diegosuarez.jpg" alt="Diego Suarez" loading="lazy"/>
+          <span class="tile-tag">Diego Suarez</span>
+          <span class="caption">Sable blanc, eaux émeraude</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/andasibe.jpg" data-caption="Indri d'Andasibe" data-reveal-item>
+          <img src="uploads/andasibe.jpg" alt="Indri" loading="lazy"/>
+          <span class="tile-tag">Andasibe</span>
+          <span class="caption">L'indri, gardien de la forêt</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/toliara.jpg" data-caption="Coucher de soleil à Toliara" data-reveal-item>
+          <img src="uploads/toliara.jpg" alt="Toliara" loading="lazy"/>
+          <span class="tile-tag">Toliara</span>
+          <span class="caption">Coucher de soleil sur l'océan</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/mahajanga.jpg" data-caption="Le bord de mer de Mahajanga" data-reveal-item>
+          <img src="uploads/mahajanga.jpg" alt="Mahajanga" loading="lazy"/>
+          <span class="tile-tag">Mahajanga</span>
+          <span class="caption">Promenade en bord de mer</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/ampefy.jpg" data-caption="Geyser d'Ampefy" data-reveal-item>
+          <img src="uploads/ampefy.jpg" alt="Geyser Ampefy" loading="lazy"/>
+          <span class="tile-tag">Ampefy</span>
+          <span class="caption">Geyser aux eaux ocres d'Ampefy</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery13.jpg" data-caption="Hauts plateaux malgaches" data-reveal-item>
+          <img src="uploads/gallery13.jpg" alt="Paysage des hauts plateaux" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Vue sur les hauts plateaux</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery20.jpg" data-caption="Baobab géant du sud malgache" data-reveal-item>
+          <img src="uploads/gallery20.jpg" alt="Baobab" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Baobab géant du sud</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery5.jpg" data-caption="Lémurien vari noir et blanc" data-reveal-item>
+          <img src="uploads/gallery5.jpg" alt="Lémurien" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Lémurien vari noir et blanc</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery21.jpg" data-caption="Lac de cratère, hauts plateaux" data-reveal-item>
+          <img src="uploads/gallery21.jpg" alt="Lac de cratère" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Lac de cratère</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery22.jpg" data-caption="Lac d'Ampefy" data-reveal-item>
+          <img src="uploads/gallery22.jpg" alt="Lac d'Ampefy" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Lac d'Ampefy</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery16.jpg" data-caption="Rencontre sur la plage" data-reveal-item>
+          <img src="uploads/gallery16.jpg" alt="Rencontre sur la plage" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Rencontre sur la plage</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery15.jpg" data-caption="Crépuscule sur les chaumières" data-reveal-item>
+          <img src="uploads/gallery15.jpg" alt="Crépuscule" loading="lazy"/>
+          <span class="tile-tag">Madagascar</span>
+          <span class="caption">Crépuscule étoilé</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <!-- ===== Dubaï ===== -->
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery11.jpg" data-caption="Quad dans le désert de Dubaï" data-reveal-item>
+          <img src="uploads/gallery11.jpg" alt="Quad désert" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Quad dans les dunes</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery12.jpg" data-caption="Coucher de soleil dans les dunes" data-reveal-item>
+          <img src="uploads/gallery12.jpg" alt="Coucher de soleil désert" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Coucher de soleil dans les dunes</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery17.jpg" data-caption="Buggy en famille" data-reveal-item>
+          <img src="uploads/gallery17.jpg" alt="Buggy" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Aventure en famille</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery18.jpg" data-caption="Ailes de bronze · Burj Khalifa" data-reveal-item>
+          <img src="uploads/gallery18.jpg" alt="Wings of Mexico Burj Khalifa" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Ailes de bronze, Burj Khalifa</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery19.jpg" data-caption="Joie dans le désert" data-reveal-item>
+          <img src="uploads/gallery19.jpg" alt="Saut dans le désert" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Joie dans le désert</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery7.jpg" data-caption="Vue panoramique depuis la Burj Khalifa" data-reveal-item>
+          <img src="uploads/gallery7.jpg" alt="Vue Burj Khalifa" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Vue panoramique sur Dubaï</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery8.jpg" data-caption="Dubai Marina by night" data-reveal-item>
+          <img src="uploads/gallery8.jpg" alt="Dubai Marina nuit" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Dubai Marina by night</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery9.jpg" data-caption="Musée du Futur" data-reveal-item>
+          <img src="uploads/gallery9.jpg" alt="Musée du Futur" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Musée du Futur</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="dubai" data-lightbox data-src="uploads/gallery10.jpg" data-caption="Quad et chameaux au coucher du soleil" data-reveal-item>
+          <img src="uploads/gallery10.jpg" alt="Quad chameaux" loading="lazy"/>
+          <span class="tile-tag">Dubaï</span>
+          <span class="caption">Quad et chameaux au crépuscule</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <!-- ===== Chine ===== -->
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery23.jpg" data-caption="Cité Interdite, Pékin" data-reveal-item>
+          <img src="uploads/gallery23.jpg" alt="Cité Interdite" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Cité Interdite, Pékin</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery24.jpg" data-caption="Banquet chinois traditionnel" data-reveal-item>
+          <img src="uploads/gallery24.jpg" alt="Banquet chinois" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Banquet chinois traditionnel</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery25.jpg" data-caption="Diorama des montagnes chinoises" data-reveal-item>
+          <img src="uploads/gallery25.jpg" alt="Diorama" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Diorama des montagnes</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery26.jpg" data-caption="Pavillons impériaux" data-reveal-item>
+          <img src="uploads/gallery26.jpg" alt="Pavillons impériaux" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Pavillons impériaux</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery27.jpg" data-caption="Crépuscule sur la cathédrale" data-reveal-item>
+          <img src="uploads/gallery27.jpg" alt="Cathédrale" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Crépuscule sur la cathédrale</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery28.jpg" data-caption="Allée commerçante de Qianmen" data-reveal-item>
+          <img src="uploads/gallery28.jpg" alt="Allée commerçante" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Allée commerçante de Qianmen</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery29.jpg" data-caption="Bateau de marbre, Palais d'Été" data-reveal-item>
+          <img src="uploads/gallery29.jpg" alt="Palais d'été" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">Bateau de marbre, Palais d'Été</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <a class="tile" data-cat="chine" data-lightbox data-src="uploads/gallery30.jpg" data-caption="Cloche de la Tour des Cloches" data-reveal-item>
+          <img src="uploads/gallery30.jpg" alt="Cloche" loading="lazy"/>
+          <span class="tile-tag">Chine</span>
+          <span class="caption">La grande cloche de Pékin</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <!-- ===== Îles ===== -->
+        <a class="tile" data-cat="iles" data-lightbox data-src="uploads/gallery14.jpg" data-caption="Catamarans à l'île Maurice" data-reveal-item>
+          <img src="uploads/gallery14.jpg" alt="Catamarans Maurice" loading="lazy"/>
+          <span class="tile-tag">Maurice</span>
+          <span class="caption">Catamarans dans les lagons</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+        <!-- ===== En vol ===== -->
+        <a class="tile" data-cat="mada" data-lightbox data-src="uploads/gallery6.jpg" data-caption="Cap sur la prochaine destination" data-reveal-item>
+          <img src="uploads/gallery6.jpg" alt="Hublot d'avion" loading="lazy"/>
+          <span class="tile-tag">En vol</span>
+          <span class="caption">Cap sur l'aventure</span>
+          <span class="zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5v12M5 11h12"/></svg></span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card" data-reveal>
+        <div>
+          <span class="eyebrow" style="color:var(--gold-500)">Vos prochaines photos</span>
+          <h2 class="mt-4" style="color:white">
+            Et si la prochaine<br/>
+            <span class="h-italic">image, c'était la vôtre ?</span>
+          </h2>
+          <p class="mt-4">
+            Chaque voyage que nous organisons est l'occasion de capturer
+            de nouveaux souvenirs. À vous de jouer.
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <a href="contact.html" class="btn btn-gold">
+            Commencer mon voyage
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Filter logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const chips = document.querySelectorAll('#chips .chip');
+      const tiles = document.querySelectorAll('.masonry .tile');
+      const count = document.getElementById('gallery-count');
+      chips.forEach(c => c.addEventListener('click', () => {
+        chips.forEach(x => x.classList.remove('is-active'));
+        c.classList.add('is-active');
+        const f = c.dataset.filter;
+        let visible = 0;
+        tiles.forEach(t => {
+          const show = f === 'all' || t.dataset.cat === f;
+          t.classList.toggle('is-hidden', !show);
+          if (show) visible++;
+        });
+        count.textContent = visible + ' photo' + (visible > 1 ? 's' : '');
+      }));
+    });
+  </script>
+</body>
+</html>

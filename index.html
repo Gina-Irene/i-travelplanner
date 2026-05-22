@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Vos rêves d'évasion prennent vie</title>
+  <meta name="description" content="Tour-opérateur spécialiste de Madagascar et des voyages internationaux. Voyages sur mesure, accompagnement personnalisé." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ===== Hero ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      padding: 160px 0 80px;
+      display: flex;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+      background: var(--navy-950);
+    }
+    .hero .art {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .hero .art::after {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(80% 60% at 70% 30%, rgba(13,42,71,0) 0%, rgba(6,26,48,0.65) 70%, rgba(6,26,48,0.9) 100%),
+        linear-gradient(180deg, rgba(6,26,48,0.5) 0%, rgba(6,26,48,0.4) 60%, rgba(6,26,48,0.95) 100%);
+      z-index: 1;
+    }
+    .hero .container { position: relative; z-index: 2; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 64px;
+      align-items: end;
+    }
+    .hero-eyebrow {
+      color: var(--gold-500);
+      display: inline-flex; align-items: center; gap: 14px;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .hero-eyebrow::before {
+      content: ""; width: 40px; height: 1px; background: var(--gold-500);
+    }
+    .hero h1 {
+      color: white;
+      font-size: clamp(56px, 9vw, 144px);
+      line-height: 0.94;
+      letter-spacing: -0.035em;
+      max-width: 16ch;
+      margin-top: 32px;
+    }
+    .hero h1 .h-italic {
+      color: var(--sand-200);
+    }
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 48px;
+      margin-top: 64px;
+      flex-wrap: wrap;
+    }
+    .hero-lead {
+      max-width: 44ch;
+      font-size: 17px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.78);
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .hero-scroll {
+      position: absolute;
+      left: 50%; bottom: 28px;
+      transform: translateX(-50%);
+      z-index: 3;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-scroll::after {
+      content: "";
+      width: 1px; height: 32px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.5), transparent);
+      animation: scrollDot 2.4s ease-in-out infinite;
+    }
+    @keyframes scrollDot {
+      0%, 100% { height: 0; opacity: 0; }
+      50% { height: 40px; opacity: 1; }
+    }
+    .hero-meta {
+      position: absolute;
+      bottom: 28px; right: 32px;
+      z-index: 3;
+      text-align: right;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.8;
+    }
+    .hero-meta strong { color: white; font-weight: 500; }
+
+    /* ===== Intro ===== */
+    .intro {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .intro-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+    .intro-art {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .intro-art::before {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px solid var(--gold-500);
+      z-index: 3;
+      pointer-events: none;
+      border-radius: var(--radius-sm);
+    }
+    .intro-art::after {
+      content: "Nos prochaines évasions";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      padding: 80px 32px 32px;
+      background: linear-gradient(180deg, transparent, rgba(6,26,48,0.7));
+      color: white;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      z-index: 4;
+    }
+    .intro h2 {
+      font-size: clamp(36px, 4.4vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .intro h2 em {
+      font-style: italic;
+      color: var(--gold-600);
+    }
+    .signature {
+      margin-top: 32px;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--navy-700);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .signature::before {
+      content: "";
+      width: 30px; height: 1px;
+      background: var(--gold-500);
+    }
+
+    /* ===== Phares ===== */
+    .phares {
+      padding: var(--space-10) 0;
+      background: var(--navy-900);
+      color: white;
+      position: relative;
+    }
+    .phares h2 { color: white; }
+    .phares-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+    .phares-head h2 { font-size: clamp(36px, 4.6vw, 64px); max-width: 14ch; }
+    .phares-head p { max-width: 40ch; color: rgba(255,255,255,0.7); margin: 0; }
+    .phares-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      grid-template-rows: 320px 320px;
+      gap: 16px;
+    }
+    .phares-grid .dest-card:nth-child(1) { grid-row: 1 / 3; }
+    @media (max-width: 900px) {
+      .phares-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .phares-grid .dest-card:nth-child(1) { grid-row: auto; min-height: 420px; }
+      .phares-grid .dest-card { min-height: 320px; }
+    }
+
+    /* ===== Why us ===== */
+    .why {
+      padding: var(--space-10) 0;
+      background: var(--sand-100);
+    }
+    .why-head { text-align: center; max-width: 720px; margin: 0 auto 80px; }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .why-item {
+      padding: 48px 32px;
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+    .why-item:last-child { border-right: none; }
+    @media (max-width: 900px) {
+      .why-grid { grid-template-columns: 1fr 1fr; }
+      .why-item:nth-child(2) { border-right: none; }
+      .why-item:nth-child(1), .why-item:nth-child(2) { border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 540px) {
+      .why-grid { grid-template-columns: 1fr; }
+      .why-item { border-right: none !important; border-bottom: 1px solid var(--line); }
+      .why-item:last-child { border-bottom: none; }
+    }
+    .why-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--gold-600);
+      letter-spacing: 0.1em;
+      display: block;
+      margin-bottom: 24px;
+    }
+    .why-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--navy-900);
+      color: var(--sand-100);
+      display: grid; place-items: center;
+      margin-bottom: 24px;
+    }
+    .why-item h3 {
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .why-item p {
+      font-size: 14px;
+      color: var(--ink-500);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* ===== Final CTA ===== */
+    .final-cta {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+    }
+    .final-cta-card {
+      background: var(--navy-900);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 80px 64px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 48px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-cta-card::before {
+      content: "";
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 320px; height: 320px;
+      border: 1px solid rgba(201,163,90,0.3);
+      border-radius: 50%;
+    }
+    .final-cta-card::after {
+      content: "";
+      position: absolute;
+      right: -40px; bottom: -40px;
+      width: 180px; height: 180px;
+      border: 1px solid rgba(201,163,90,0.2);
+      border-radius: 50%;
+    }
+    .final-cta-card h2 { color: white; font-size: clamp(36px, 4vw, 56px); }
+    .final-cta-card p { color: rgba(255,255,255,0.75); max-width: 44ch; }
+    @media (max-width: 900px) {
+      .final-cta-card { grid-template-columns: 1fr; padding: 56px 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" data-hero-anim data-screen-label="01 Hero">
+    <div class="art" data-art="hero"></div>
+
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-eyebrow" data-hero-fade>Tour-opérateur · Antananarivo</span>
+          <h1>
+            <span class="split-line"><span>Vos rêves</span></span><br/>
+            <span class="split-line"><span>d'évasion</span></span><br/>
+            <span class="split-line"><span class="h-italic">prennent vie.</span></span>
+          </h1>
+          <div class="hero-foot">
+            <p class="hero-lead" data-hero-fade>
+              Voyages organisés, séjours sur mesure et accompagnement
+              personnalisé vers les plus belles destinations du monde —
+              avec un soin particulier pour la Grande Île.
+            </p>
+            <div class="hero-ctas" data-hero-fade>
+              <a href="destinations.html" class="btn btn-gold">
+                Découvrez nos circuits
+                <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a href="contact.html" class="btn btn-outline-light">
+                Contactez-nous
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">Faire défiler</div>
+    <div class="hero-meta">
+      <div><strong>17 destinations</strong></div>
+      <div>4 continents · 1 île d'exception</div>
+    </div>
+  </section>
+
+  <!-- ===== Marquee ===== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item"><em style="font-style:italic">Madagascar</em></span>
+      <span class="marquee-item">Tanzanie</span>
+      <span class="marquee-item"><em style="font-style:italic">Dubaï</em></span>
+      <span class="marquee-item">Afrique du Sud</span>
+      <span class="marquee-item"><em style="font-style:italic">Japon</em></span>
+      <span class="marquee-item">Thaïlande</span>
+      <span class="marquee-item"><em style="font-style:italic">Maurice</em></span>
+      <span class="marquee-item">Singapour</span>
+      <span class="marquee-item"><em style="font-style:italic">Vietnam</em></span>
+      <span class="marquee-item">Corée du Sud</span>
+      <!-- duplicate -->
+      <span class="marquee-item"><em style="font-style:italic">Madagascar</em></span>
+      <span class="marquee-item">Tanzanie</span>
+      <span class="marquee-item"><em style="font-style:italic">Dubaï</em></span>
+      <span class="marquee-item">Afrique du Sud</span>
+      <span class="marquee-item"><em style="font-style:italic">Japon</em></span>
+      <span class="marquee-item">Thaïlande</span>
+      <span class="marquee-item"><em style="font-style:italic">Maurice</em></span>
+      <span class="marquee-item">Singapour</span>
+      <span class="marquee-item"><em style="font-style:italic">Vietnam</em></span>
+      <span class="marquee-item">Corée du Sud</span>
+    </div>
+  </div>
+
+  <!-- ===== Intro ===== -->
+  <section class="intro" data-screen-label="02 Introduction">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-art art" data-art="hero" data-art-zoom></div>
+        <div data-reveal>
+          <span class="eyebrow">Bienvenue chez I-Travel Planner</span>
+          <h2 class="mt-5">
+            Plus qu'un simple voyage,<br/>
+            <em>nous créons des expériences</em><br/>
+            pensées pour vous.
+          </h2>
+          <p class="lead mt-6">
+            Circuits personnalisés, découvertes authentiques et accompagnement
+            de confiance : notre mission est de transformer chaque projet
+            d'évasion en une expérience mémorable — pensée selon vos envies,
+            votre rythme et votre style.
+          </p>
+          <div class="signature">Mialy R. — Fondatrice</div>
+          <div class="mt-6">
+            <a href="a-propos.html" class="btn btn-outline">
+              Notre histoire
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Phares ===== -->
+  <section class="phares" data-screen-label="03 Destinations phares">
+    <div class="container">
+      <div class="phares-head" data-reveal>
+        <h2>
+          Nos destinations<br/>
+          <span class="h-italic">phares.</span>
+        </h2>
+        <p>
+          Une sélection soigneusement curatée pour vous inspirer.
+          Chaque destination est un univers à part — explorons-le ensemble.
+        </p>
+      </div>
+
+      <div class="phares-grid" data-reveal-group>
+        <a href="madagascar.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="mada"></div>
+          <span class="dest-flag">🇲🇬</span>
+          <span class="dest-index">01 / 04</span>
+          <div class="dest-card-body">
+            <span class="eyebrow center" style="color:var(--gold-500);font-size:11px">L'île rouge</span>
+            <h3 style="margin-top:8px">Madagascar</h3>
+            <p>
+              Baobabs, lémuriens, lagons turquoise et culture vibrante.
+              La spécialité de la maison, avec 8 régions à explorer.
+            </p>
+            <span class="dest-card-cta">
+              Découvrir Madagascar
+              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="destinations.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="tanzanie"></div>
+          <span class="dest-flag">🇹🇿</span>
+          <span class="dest-index">02 / 04</span>
+          <div class="dest-card-body">
+            <h3>Tanzanie</h3>
+            <p>Safaris, Serengeti, Zanzibar.</p>
+            <span class="dest-card-cta">
+              Découvrir
+              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="destinations.html#dubai" class="dest-card" data-reveal-item>
+          <div class="art" data-art="dubai"></div>
+          <span class="dest-flag">🇦🇪</span>
+          <span class="dest-index">03 / 04</span>
+          <div class="dest-card-body">
+            <h3>Dubaï</h3>
+            <p>L'audace du futur au cœur du désert.</p>
+            <span class="dest-card-cta">
+              Découvrir
+              <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+        </a>
+      </div>
+
+      <div class="mt-7" style="display:flex;justify-content:center" data-reveal>
+        <a href="destinations.html" class="btn btn-outline-light">
+          Toutes nos destinations
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why us ===== -->
+  <section class="why" data-screen-label="04 Pourquoi nous">
+    <div class="container">
+      <div class="why-head" data-reveal>
+        <span class="eyebrow center">Pourquoi nous</span>
+        <h2 class="mt-5">
+          Quatre raisons<br/>
+          <em class="h-italic" style="color:var(--gold-600)">de voyager avec nous.</em>
+        </h2>
+      </div>
+
+      <div class="why-grid" data-reveal-group>
+        <div class="why-item" data-reveal-item>
+          <span class="why-num">N° 01</span>
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </div>
+          <h3>Expertise Madagascar</h3>
+          <p>Spécialistes de la Grande Île. Connaissance fine du terrain, partenaires locaux de confiance.</p>
+        </div>
+
+        <div class="why-item" data-reveal-item>
+          <span class="why-num">N° 02</span>
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 12h16M4 6h16M4 18h10"/>
+            </svg>
+          </div>
+          <h3>Sur-mesure</h3>
+          <p>Voyages 100% personnalisés selon vos rêves, votre rythme, votre budget.</p>
+        </div>
+
+        <div class="why-item" data-reveal-item>
+          <span class="why-num">N° 03</span>
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+            </svg>
+          </div>
+          <h3>Destinations Monde</h3>
+          <p>Asie, Afrique, Océan Indien, Moyen-Orient. Nous concevons aussi votre voyage à l'étranger.</p>
+        </div>
+
+        <div class="why-item" data-reveal-item>
+          <span class="why-num">N° 04</span>
+          <div class="why-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2 4 6v6c0 4 3.5 8 8 10 4.5-2 8-6 8-10V6l-8-4z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <h3>Sécurité & confiance</h3>
+          <p>Conformité, accompagnement constant avant, pendant et après votre voyage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Final CTA ===== -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card" data-reveal>
+        <div>
+          <span class="eyebrow" style="color:var(--gold-500)">Prêt à partir ?</span>
+          <h2 class="mt-4">
+            Discutons<br/>
+            <span class="h-italic">de votre prochaine évasion.</span>
+          </h2>
+          <p class="mt-4">
+            Une idée précise ou simplement l'envie de voyager autrement ?
+            Échangeons sur votre projet. Réponse sous 24 h ouvrées.
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <a href="contact.html" class="btn btn-gold">
+            Demander un devis
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://wa.me/261376863780" class="btn btn-outline-light">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 14c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.8-.8 1c-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.1 3 .1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.6-.6 1.9-1.3.2-.6.2-1.2.1-1.3 0-.2-.2-.3-.4-.4zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.3A10 10 0 1 0 12 2z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

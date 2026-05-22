@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Destinations internationales</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .dest-intro {
+      padding: var(--space-9) 0 var(--space-7);
+      background: var(--sand-50);
+    }
+    .dest-intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: end;
+    }
+    @media (max-width: 900px) { .dest-intro-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .dest-intro h2 { font-size: clamp(36px, 4.4vw, 56px); line-height: 1.05; max-width: 14ch; }
+    .dest-intro p { color: var(--ink-700); font-size: 17px; max-width: 44ch; margin: 0; }
+
+    .dest-grid {
+      padding: var(--space-7) 0 var(--space-10);
+      background: var(--sand-50);
+    }
+    .grid-3x3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1100px) { .grid-3x3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid-3x3 { grid-template-columns: 1fr; } }
+    .grid-3x3 .dest-card {
+      min-height: 440px;
+      border-radius: var(--radius);
+    }
+    .grid-3x3 .dest-card.tall { min-height: 540px; }
+
+    .quote-strip {
+      padding: var(--space-9) 0;
+      background: var(--sand-100);
+      text-align: center;
+      border-top: 1px solid var(--line-light);
+      border-bottom: 1px solid var(--line-light);
+    }
+    .quote-strip blockquote {
+      margin: 0 auto;
+      max-width: 28ch;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(28px, 3.4vw, 44px);
+      line-height: 1.2;
+      color: var(--navy-900);
+    }
+    .quote-strip blockquote::before {
+      content: "“";
+      display: block;
+      font-size: 64px;
+      color: var(--gold-500);
+      line-height: 0.6;
+      margin-bottom: 24px;
+    }
+
+    .final-section {
+      padding: var(--space-10) 0;
+      background: var(--navy-900);
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .final-section .art {
+      position: absolute; inset: 0;
+      z-index: 0; opacity: 0.18;
+    }
+    .final-section .container { position: relative; z-index: 1; }
+    .final-section h2 { color: white; font-size: clamp(40px, 5vw, 72px); max-width: 16ch; margin: 0 auto; line-height: 1.05; }
+    .final-section p { color: rgba(255,255,255,0.78); max-width: 52ch; margin: 24px auto; font-size: 17px; }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero Destinations">
+    <div class="art" data-art="intl"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>Destinations internationales</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">9 destinations · 4 continents</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>Explorez les plus</span></span><br/>
+        <span class="split-line"><span>belles destinations</span></span><br/>
+        <span class="split-line"><span class="h-italic">du monde.</span></span>
+      </h1>
+      <div class="mt-7" data-hero-fade style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="contact.html" class="btn btn-gold">
+          Demander un devis
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#destinations" class="btn btn-outline-light">Voir les destinations</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro -->
+  <section class="dest-intro">
+    <div class="container">
+      <div class="dest-intro-grid">
+        <div data-reveal>
+          <span class="eyebrow">Nos destinations</span>
+          <h2 class="mt-5">
+            Des métropoles futuristes<br/>
+            aux <em style="font-style:italic;color:var(--gold-600)">plages paradisiaques.</em>
+          </h2>
+        </div>
+        <div data-reveal data-delay="0.1">
+          <p>
+            Des safaris africains aux trésors culturels d'Asie, chaque destination
+            est soigneusement sélectionnée pour créer des voyages uniques et
+            mémorables. Découvrez l'univers que nous avons préparé pour vous.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destinations grid -->
+  <section class="dest-grid" id="destinations" data-screen-label="02 Grille destinations">
+    <div class="container">
+      <div class="grid-3x3" data-reveal-group>
+
+        <a id="malaisie" href="contact.html" class="dest-card tall" data-reveal-item>
+          <div class="art" data-art="malaisie"></div>
+          <span class="dest-flag">🇲🇾</span>
+          <span class="dest-index">01</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie du Sud-Est</span>
+            <h3 style="margin-top:8px">Malaisie</h3>
+            <p>
+              Entre modernité, nature et traditions. Kuala Lumpur, îles paradisiaques,
+              marchés nocturnes et richesses culturelles de l'Asie du Sud-Est.
+            </p>
+            <span class="dest-card-cta">Découvrir la destination <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="dubai" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="dubai"></div>
+          <span class="dest-flag">🇦🇪</span>
+          <span class="dest-index">02</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Moyen-Orient</span>
+            <h3 style="margin-top:8px">Dubaï</h3>
+            <p>
+              L'audace du futur au cœur du désert. Luxe, architecture spectaculaire,
+              culture arabe et expériences inoubliables.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="afriquesud" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="afriquesud"></div>
+          <span class="dest-flag">🇿🇦</span>
+          <span class="dest-index">03</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Afrique australe</span>
+            <h3 style="margin-top:8px">Afrique du Sud</h3>
+            <p>
+              Safaris, paysages grandioses et expériences authentiques.
+              Des Big Five du Kruger aux routes panoramiques du Cap.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="singapour" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="singapour"></div>
+          <span class="dest-flag">🇸🇬</span>
+          <span class="dest-index">04</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie</span>
+            <h3 style="margin-top:8px">Singapour</h3>
+            <p>
+              Innovation, culture et élégance urbaine. Une immersion fascinante
+              entre jardins futuristes, gastronomie et diversité culturelle.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="thailande" href="contact.html" class="dest-card tall" data-reveal-item>
+          <div class="art" data-art="thailande"></div>
+          <span class="dest-flag">🇹🇭</span>
+          <span class="dest-index">05</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie du Sud-Est</span>
+            <h3 style="margin-top:8px">Thaïlande</h3>
+            <p>
+              Temples, plages et douceur de vivre asiatique.
+              Bangkok, Phuket, Chiang Mai — un voyage aux mille couleurs.
+            </p>
+            <span class="dest-card-cta">Découvrir la destination <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="japon" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="japon"></div>
+          <span class="dest-flag">🇯🇵</span>
+          <span class="dest-index">06</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie</span>
+            <h3 style="margin-top:8px">Japon</h3>
+            <p>
+              Traditions ancestrales et modernité spectaculaire.
+              Tokyo, Kyoto, Osaka, Mont Fuji — un équilibre unique.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="coree" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="coree"></div>
+          <span class="dest-flag">🇰🇷</span>
+          <span class="dest-index">07</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie</span>
+            <h3 style="margin-top:8px">Corée du Sud</h3>
+            <p>
+              Entre culture pop, traditions et énergie urbaine.
+              Séoul, palais historiques et gastronomie moderne.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="vietnam" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="vietnam"></div>
+          <span class="dest-flag">🇻🇳</span>
+          <span class="dest-index">08</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Asie du Sud-Est</span>
+            <h3 style="margin-top:8px">Vietnam</h3>
+            <p>
+              Rizières, patrimoine et expériences authentiques.
+              Baie d'Halong, Hoi An, Hanoi et saveurs inoubliables.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a id="maurice" href="contact.html" class="dest-card" data-reveal-item>
+          <div class="art" data-art="maurice"></div>
+          <span class="dest-flag">🇲🇺</span>
+          <span class="dest-index">09</span>
+          <div class="dest-card-body">
+            <span class="eyebrow" style="color:var(--gold-500);font-size:10px">Océan Indien</span>
+            <h3 style="margin-top:8px">Maurice</h3>
+            <p>
+              Évasion tropicale au cœur de l'Océan Indien.
+              Lagons turquoise, détente, gastronomie et découvertes insulaires.
+            </p>
+            <span class="dest-card-cta">Découvrir <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote -->
+  <section class="quote-strip">
+    <div class="container">
+      <blockquote data-reveal>
+        Chaque destination est un univers — <em>nous vous y guidons.</em>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-section" data-screen-label="03 CTA final">
+    <div class="art" data-art="intl"></div>
+    <div class="container">
+      <span class="eyebrow center" data-reveal style="color:var(--gold-500)">Votre prochaine aventure</span>
+      <h2 class="mt-6" data-reveal>
+        Vous ne trouvez pas<br/>
+        <span class="h-italic">votre destination ?</span>
+      </h2>
+      <p data-reveal>
+        Nous créons aussi des voyages 100% personnalisés selon vos envies,
+        votre budget et votre style de voyage. Une simple idée suffit
+        à initier l'aventure.
+      </p>
+      <div class="mt-7" data-reveal style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <a href="contact.html" class="btn btn-gold">
+          Obtenir un devis personnalisé
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="madagascar.html" class="btn btn-outline-light">
+          Voir Madagascar
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

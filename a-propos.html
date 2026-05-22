@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Qui sommes-nous</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .about-intro {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+    }
+    .about-intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .about-intro-grid { grid-template-columns: 1fr; gap: 48px; } }
+    .about-intro h2 { font-size: clamp(40px, 5vw, 72px); line-height: 1.02; }
+    .about-intro h2 em { font-style: italic; color: var(--gold-600); }
+
+    .pillars {
+      padding: var(--space-10) 0;
+      background: var(--sand-100);
+    }
+    .pillar {
+      display: grid;
+      grid-template-columns: 0.4fr 1fr 1fr;
+      gap: 56px;
+      align-items: start;
+      padding: 64px 0;
+      border-top: 1px solid var(--line);
+    }
+    .pillar:last-child { border-bottom: 1px solid var(--line); }
+    @media (max-width: 900px) { .pillar { grid-template-columns: 1fr; gap: 24px; padding: 40px 0; } }
+    .pillar-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 80px;
+      color: var(--gold-500);
+      line-height: 1;
+    }
+    .pillar h3 {
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.1;
+    }
+    .pillar p {
+      color: var(--ink-700);
+      font-size: 16px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .engagement {
+      padding: var(--space-10) 0;
+      background: var(--navy-900);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .engagement::before {
+      content: "";
+      position: absolute;
+      right: -180px; top: -180px;
+      width: 480px; height: 480px;
+      border: 1px solid rgba(201,163,90,0.2);
+      border-radius: 50%;
+    }
+    .engagement::after {
+      content: "";
+      position: absolute;
+      left: -120px; bottom: -120px;
+      width: 320px; height: 320px;
+      border: 1px solid rgba(201,163,90,0.15);
+      border-radius: 50%;
+    }
+    .engagement h2 { color: white; font-size: clamp(36px, 4.4vw, 60px); max-width: 16ch; }
+    .engagement-list {
+      list-style: none; padding: 0; margin: 56px 0 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px 56px;
+    }
+    @media (max-width: 700px) { .engagement-list { grid-template-columns: 1fr; } }
+    .engagement-list li {
+      display: flex;
+      gap: 20px;
+      padding: 24px 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      align-items: flex-start;
+    }
+    .engagement-list .num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--gold-500);
+      letter-spacing: 0.1em;
+      min-width: 36px;
+    }
+    .engagement-list .text {
+      font-family: var(--font-display);
+      font-size: 22px;
+      line-height: 1.3;
+      color: white;
+    }
+
+    .philo {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+      text-align: center;
+    }
+    .philo blockquote {
+      margin: 0 auto;
+      max-width: 24ch;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(36px, 4.6vw, 64px);
+      line-height: 1.15;
+      color: var(--navy-900);
+    }
+    .philo blockquote em { color: var(--gold-600); }
+    .philo cite {
+      display: block;
+      margin-top: 40px;
+      font-style: normal;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .philo cite::before {
+      content: "";
+      display: inline-block;
+      width: 30px; height: 1px;
+      background: var(--gold-500);
+      vertical-align: middle;
+      margin-right: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero À propos">
+    <div class="art" data-art="about"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>Qui sommes-nous</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">Notre maison</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>L'art de voyager</span></span><br/>
+        <span class="split-line"><span class="h-italic">autrement.</span></span>
+      </h1>
+      <p class="lead mt-6" data-hero-fade>
+        I-Travel Planner est née d'une conviction simple :
+        chaque voyage mérite d'être pensé avec attention,
+        soin et passion. Tour-opérateur indépendant basé à
+        Antananarivo, nous concevons des expériences qui
+        ressemblent à ceux qui les vivent.
+      </p>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="about-intro" data-screen-label="02 Vision">
+    <div class="container">
+      <div class="about-intro-grid">
+        <div data-reveal>
+          <span class="eyebrow">Notre vision</span>
+        </div>
+        <div data-reveal data-delay="0.1">
+          <h2>
+            Un voyage n'est pas une destination,<br/>
+            <em>c'est une émotion à composer.</em>
+          </h2>
+          <p class="lead mt-6">
+            Chez I-Travel Planner, nous croyons qu'un voyage ne se
+            limite pas à un point sur la carte. C'est une expérience,
+            une découverte, une parenthèse qui mérite d'être pensée
+            avec attention. Notre mission est d'accompagner chaque
+            voyageur dans la création d'un projet qui lui ressemble,
+            en proposant des expériences personnalisées, un
+            accompagnement fiable et des conseils adaptés à chaque
+            envie d'évasion.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="pillars" data-screen-label="03 Piliers">
+    <div class="container">
+      <div data-reveal style="max-width:60ch;margin-bottom:64px">
+        <span class="eyebrow">Notre expertise</span>
+        <h2 class="display-3 mt-5">
+          Trois piliers,<br/>
+          <em class="h-italic" style="color:var(--gold-600)">une seule exigence.</em>
+        </h2>
+      </div>
+
+      <div class="pillar" data-reveal>
+        <span class="pillar-num">01</span>
+        <h3>Voyages internationaux soigneusement composés</h3>
+        <p>
+          Des itinéraires conçus avec exigence pour les voyageurs en quête
+          d'expériences authentiques. Asie, Afrique, Océan Indien, Moyen-Orient :
+          chaque destination est sélectionnée pour ce qu'elle a de plus singulier.
+        </p>
+      </div>
+
+      <div class="pillar" data-reveal>
+        <span class="pillar-num">02</span>
+        <h3>Spécialistes de Madagascar</h3>
+        <p>
+          Avenue des Baobabs, lagons de Nosy Be, baleines de Sainte-Marie, baie
+          d'émeraude de Diego… Nous connaissons la Grande Île dans ses moindres
+          détails et nos partenaires locaux nous permettent de proposer des
+          expériences que peu d'agences savent orchestrer.
+        </p>
+      </div>
+
+      <div class="pillar" data-reveal>
+        <span class="pillar-num">03</span>
+        <h3>Sur-mesure et accompagnement humain</h3>
+        <p>
+          Voyages organisés, séjours sur mesure, escapades premium, aventures
+          culturelles, découvertes authentiques. Chaque projet est conçu avec
+          passion et souci du détail — et un interlocuteur unique, qui vous suit
+          du premier message au retour de voyage.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Engagement -->
+  <section class="engagement" data-screen-label="04 Engagement">
+    <div class="container" style="position:relative;z-index:1">
+      <div style="max-width:42ch" data-reveal>
+        <span class="eyebrow" style="color:var(--gold-500)">Notre engagement</span>
+        <h2 class="mt-5">
+          Pourquoi nos voyageurs<br/>
+          <span class="h-italic">nous font confiance.</span>
+        </h2>
+      </div>
+      <ul class="engagement-list" data-reveal-group>
+        <li data-reveal-item><span class="num">01</span><span class="text">Un accompagnement <em style="font-style:italic;color:var(--gold-500)">personnalisé</em> à chaque étape</span></li>
+        <li data-reveal-item><span class="num">02</span><span class="text">Conseils et expertise <em style="font-style:italic;color:var(--gold-500)">destination</em></span></li>
+        <li data-reveal-item><span class="num">03</span><span class="text">Solutions <em style="font-style:italic;color:var(--gold-500)">adaptées</em> à vos besoins et votre budget</span></li>
+        <li data-reveal-item><span class="num">04</span><span class="text">Sélection <em style="font-style:italic;color:var(--gold-500)">rigoureuse</em> de partenaires et prestations</span></li>
+        <li data-reveal-item><span class="num">05</span><span class="text">Suivi avant, <em style="font-style:italic;color:var(--gold-500)">pendant</em> et après le voyage</span></li>
+        <li data-reveal-item><span class="num">06</span><span class="text">Confidentialité et <em style="font-style:italic;color:var(--gold-500)">conformité</em> totales</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="philo" data-screen-label="05 Philosophie">
+    <div class="container">
+      <span class="eyebrow center" data-reveal>Notre philosophie</span>
+      <blockquote class="mt-7" data-reveal data-delay="0.15">
+        Nous ne proposons pas<br/>
+        simplement des voyages.<br/>
+        <em>Nous créons des histoires</em><br/>
+        <em>à vivre.</em>
+      </blockquote>
+      <cite data-reveal>L'équipe I-Travel Planner</cite>
+      <div class="mt-7" data-reveal>
+        <a href="contact.html" class="btn btn-primary">
+          Parlons de votre projet
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

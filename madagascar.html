@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Madagascar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .mada-stats {
+      padding: var(--space-7) 0;
+      background: var(--sand-50);
+      border-bottom: 1px solid var(--line-light);
+    }
+    .mada-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 700px) { .mada-stats-grid { grid-template-columns: 1fr 1fr; } }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 4vw, 56px);
+      font-style: italic;
+      color: var(--navy-900);
+      line-height: 1;
+      font-variation-settings: "opsz" 144;
+    }
+    .stat-num em { color: var(--gold-600); font-style: italic; }
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .spotlight {
+      padding: var(--space-10) 0;
+      background: var(--sand-100);
+    }
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (max-width: 900px) { .spotlight-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .spotlight-art {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .spotlight h2 { font-size: clamp(40px, 4.6vw, 64px); line-height: 1.05; }
+    .spotlight h2 em { font-style: italic; color: var(--gold-600); }
+    .spotlight-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--gold-500);
+      color: var(--navy-900);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 30px;
+      margin-bottom: 24px;
+    }
+
+    .mada-grid {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+    }
+    .mada-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+    .mada-head h2 { font-size: clamp(36px, 4.6vw, 60px); max-width: 16ch; }
+    .mada-head p { max-width: 40ch; color: var(--ink-700); margin: 0; }
+
+    .mada-list { display: flex; flex-direction: column; gap: 8px; }
+    .mada-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1.2fr 1fr 160px;
+      gap: 32px;
+      align-items: center;
+      padding: 28px 32px;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--line-light);
+      transition: all 0.4s cubic-bezier(.6,.2,.2,1);
+      position: relative;
+      color: var(--ink-900);
+    }
+    .mada-row:hover {
+      background: var(--navy-900);
+      color: white;
+      transform: translateX(8px);
+    }
+    .mada-row:hover h3 { color: white; }
+    .mada-row:hover .mada-art-thumb { transform: scale(1.05); }
+    .mada-row:hover .mada-cta { color: var(--gold-500); }
+    .mada-row:hover .mada-row-num { color: rgba(255,255,255,0.5); }
+
+    @media (max-width: 1100px) {
+      .mada-row { grid-template-columns: 60px 1fr 1.5fr; gap: 24px; }
+      .mada-row > .mada-region, .mada-row > .mada-cta { display: none; }
+    }
+    @media (max-width: 640px) {
+      .mada-row { grid-template-columns: 1fr; gap: 16px; padding: 24px; }
+      .mada-row-num { font-size: 14px; }
+    }
+
+    .mada-row-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--gold-600);
+    }
+    .mada-art-thumb {
+      width: 100px;
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: transform 0.5s;
+    }
+    .mada-row-content h3 {
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.15;
+      margin: 0 0 6px;
+      transition: color 0.3s;
+    }
+    .mada-row-content p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+    .mada-region {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+    .mada-cta {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-self: end;
+      transition: color 0.3s;
+    }
+
+    .seasons {
+      padding: var(--space-9) 0;
+      background: var(--navy-900);
+      color: white;
+    }
+    .seasons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    @media (max-width: 900px) { .seasons-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .seasons-grid { grid-template-columns: 1fr; } }
+    .season {
+      padding: 32px 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .season h4 {
+      color: white;
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .season .month {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-500);
+      margin-bottom: 16px;
+    }
+    .season p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
+      line-height: 1.55;
+    }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero Madagascar">
+    <div class="art" data-art="mada"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>Madagascar</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">La spécialité de la maison</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>Madagascar,</span></span><br/>
+        <span class="split-line"><span class="h-italic">un monde à part.</span></span>
+      </h1>
+      <p class="lead mt-6" data-hero-fade>
+        Entre paysages spectaculaires, plages paradisiaques, forêts
+        tropicales et cultures authentiques, la Grande Île vous invite
+        à vivre une expérience unique. Explorez l'île rouge autrement,
+        à travers des voyages riches en émotions et en découvertes.
+      </p>
+      <div class="mt-7" data-hero-fade style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="#regions" class="btn btn-gold">
+          Découvrir les régions
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="contact.html" class="btn btn-outline-light">Composer mon voyage</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="mada-stats">
+    <div class="container">
+      <div class="mada-stats-grid" data-reveal-group>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">8 <em>régions</em></span>
+          <span class="stat-label">À explorer</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">587 000 <em>km²</em></span>
+          <span class="stat-label">D'aventure</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">110 <em>espèces</em></span>
+          <span class="stat-label">De lémuriens endémiques</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">5 000 <em>km</em></span>
+          <span class="stat-label">De côtes et plages</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spotlight -->
+  <section class="spotlight">
+    <div class="container">
+      <div class="spotlight-grid">
+        <div class="spotlight-art art" data-art="morondava" data-art-zoom data-reveal></div>
+        <div data-reveal data-delay="0.1">
+          <span class="spotlight-tag">À ne pas manquer</span>
+          <h2>
+            L'Avenue<br/>
+            <em>des Baobabs.</em>
+          </h2>
+          <p class="lead mt-6">
+            À la sortie de Morondava, des géants centenaires aux silhouettes
+            iconiques se dressent face au couchant. Un instant suspendu,
+            l'un des plus photographiés de l'île — et pour cause.
+            Nos itinéraires l'incluent en fin d'après-midi, à l'heure où
+            la lumière transforme la scène en or pur.
+          </p>
+          <div class="mt-6">
+            <a href="contact.html" class="btn btn-outline">
+              Planifier ce moment
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Regions list -->
+  <section class="mada-grid" id="regions" data-screen-label="02 Régions">
+    <div class="container">
+      <div class="mada-head" data-reveal>
+        <h2>
+          Huit régions,<br/>
+          <span class="h-italic">huit univers.</span>
+        </h2>
+        <p>
+          Chaque destination malgache raconte une histoire singulière.
+          Sélectionnez celles qui résonnent, et nous composerons
+          votre itinéraire sur mesure.
+        </p>
+      </div>
+
+      <div class="mada-list" data-reveal-group>
+        <a id="morondava" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">01</span>
+          <div class="mada-art-thumb art" data-art="morondava"></div>
+          <div class="mada-row-content">
+            <h3>Morondava</h3>
+            <p>Terre des baobabs et couchers de soleil magiques — paysages iconiques entre mer et culture locale.</p>
+          </div>
+          <span class="mada-region">Côte Ouest</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="nosybe" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">02</span>
+          <div class="mada-art-thumb art" data-art="nosybe"></div>
+          <div class="mada-row-content">
+            <h3>Nosy Be</h3>
+            <p>L'île aux parfums et aux eaux turquoise — plages de rêve, lagons cristallins, ambiance tropicale.</p>
+          </div>
+          <span class="mada-region">Nord-Ouest</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="diego" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">03</span>
+          <div class="mada-art-thumb art" data-art="diego"></div>
+          <div class="mada-row-content">
+            <h3>Diego Suarez · Antsiranana</h3>
+            <p>Une des plus belles baies du monde — mer émeraude, montagnes et héritage colonial.</p>
+          </div>
+          <span class="mada-region">Nord</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="saintemarie" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">04</span>
+          <div class="mada-art-thumb art" data-art="saintemarie"></div>
+          <div class="mada-row-content">
+            <h3>Sainte-Marie</h3>
+            <p>Nature, calme et observation des baleines (en saison) — île paisible aux plages sauvages.</p>
+          </div>
+          <span class="mada-region">Côte Est</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="toliara" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">05</span>
+          <div class="mada-art-thumb art" data-art="toliara"></div>
+          <div class="mada-row-content">
+            <h3>Toliara</h3>
+            <p>Entre mer, désert et paysages du Sud — où plages, forêts épineuses et traditions malgaches se rencontrent.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="mahajanga" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">06</span>
+          <div class="mada-art-thumb art" data-art="mahajanga"></div>
+          <div class="mada-row-content">
+            <h3>Mahajanga</h3>
+            <p>La cité des fleurs au bord de l'océan — ville côtière connue pour ses couchers de soleil et sa gastronomie.</p>
+          </div>
+          <span class="mada-region">Nord-Ouest</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="andasibe" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">07</span>
+          <div class="mada-art-thumb art" data-art="andasibe"></div>
+          <div class="mada-row-content">
+            <h3>Andasibe</h3>
+            <p>Au cœur de la forêt tropicale — réserve emblématique, lémuriens et biodiversité exceptionnelle.</p>
+          </div>
+          <span class="mada-region">Centre-Est</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a id="ampefy" href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">08</span>
+          <div class="mada-art-thumb art" data-art="ampefy"></div>
+          <div class="mada-row-content">
+            <h3>Ampefy</h3>
+            <p>Lacs, cascades et paysages volcaniques — escapade nature à deux pas d'Antananarivo.</p>
+          </div>
+          <span class="mada-region">Hauts-Plateaux</span>
+          <span class="mada-cta">Découvrir <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seasons -->
+  <section class="seasons" data-screen-label="03 Saisons">
+    <div class="container">
+      <div data-reveal style="max-width:50ch">
+        <span class="eyebrow" style="color:var(--gold-500)">Quand partir ?</span>
+        <h2 class="mt-5">
+          Madagascar<br/>
+          <span class="h-italic">toute l'année.</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.7);margin-top:24px;max-width:46ch">
+          Chaque saison ouvre des fenêtres différentes sur l'île.
+          Voici ce qu'il faut savoir pour bien choisir votre période.
+        </p>
+      </div>
+
+      <div class="seasons-grid" data-reveal-group>
+        <div class="season" data-reveal-item>
+          <span class="month">Avr – Oct</span>
+          <h4>Saison sèche</h4>
+          <p>La période idéale. Ciel dégagé, températures douces, parfaite pour les safaris et la côte ouest.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Jul – Sep</span>
+          <h4>Baleines à Sainte-Marie</h4>
+          <p>Les baleines à bosse migrent dans le canal. Observations spectaculaires garanties.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Sep – Déc</span>
+          <h4>Lémuriens & Andasibe</h4>
+          <p>Période d'observation optimale : naissances, indri en activité, forêt vivante.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Nov – Mar</span>
+          <h4>Saison verte</h4>
+          <p>Paysages luxuriants, baobabs en feuilles, peu de monde. À éviter sur la côte est en plein été austral.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card" data-reveal>
+        <div>
+          <span class="eyebrow" style="color:var(--gold-500)">Madagascar sur mesure</span>
+          <h2 class="mt-4" style="color:white">
+            Composez<br/>
+            <span class="h-italic">votre itinéraire idéal.</span>
+          </h2>
+          <p class="mt-4">
+            Combinez plusieurs régions, ajustez le rythme, ajoutez des expériences
+            uniques. Nous orchestrons tout — vols intérieurs, hébergements,
+            guides locaux, transferts.
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <a href="contact.html" class="btn btn-gold">
+            Demander un devis
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://wa.me/261376863780" class="btn btn-outline-light">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 14c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.8-.8 1c-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.1 3 .1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.6-.6 1.9-1.3.2-.6.2-1.2.1-1.3 0-.2-.2-.3-.4-.4zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.3A10 10 0 1 0 12 2z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

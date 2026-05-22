@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .contact-main {
+      padding: var(--space-9) 0 var(--space-10);
+      background: var(--sand-50);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 1000px) { .contact-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+    /* Form */
+    .form {
+      background: white;
+      padding: 48px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line-light);
+    }
+    @media (max-width: 600px) { .form { padding: 32px 24px; } }
+    .form h2 { font-size: clamp(28px, 3vw, 40px); }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .field input, .field select, .field textarea {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      padding: 14px 0;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink-900);
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--navy-900);
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.55;
+    }
+    .form-actions {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .form-actions small {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 30ch;
+    }
+
+    /* Side info */
+    .contact-side h2 { font-size: clamp(36px, 4.2vw, 56px); line-height: 1.05; }
+    .contact-side h2 em { font-style: italic; color: var(--gold-600); }
+
+    .info-list {
+      list-style: none; padding: 0; margin: 56px 0 0;
+      display: flex; flex-direction: column;
+    }
+    .info-row {
+      padding: 28px 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+    .info-row:last-child { border-bottom: 1px solid var(--line); }
+    .info-row .ico {
+      width: 32px; height: 32px;
+      display: grid; place-items: center;
+      color: var(--gold-600);
+    }
+    .info-row .info-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .info-row .info-value {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--navy-900);
+    }
+    .info-row a.info-value:hover { color: var(--gold-600); }
+    .info-row .info-action {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--navy-900);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .social-row a {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      display: grid; place-items: center;
+      color: var(--navy-900);
+      transition: all 0.25s;
+    }
+    .social-row a:hover { background: var(--navy-900); color: var(--sand-50); border-color: var(--navy-900); }
+
+    .success-msg {
+      display: none;
+      padding: 32px;
+      border-radius: var(--radius);
+      background: var(--navy-900);
+      color: white;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .success-msg.is-shown { display: block; }
+    .success-msg h3 {
+      color: white;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .success-msg p { color: rgba(255,255,255,0.75); margin: 0; }
+
+    /* Map block */
+    .map-block {
+      padding: var(--space-9) 0;
+      background: var(--sand-100);
+    }
+    .map-frame {
+      aspect-ratio: 21/9;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      position: relative;
+      background: var(--navy-800);
+    }
+    .map-pin {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -100%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .map-pin-dot {
+      width: 18px; height: 18px;
+      background: var(--gold-500);
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 8px rgba(201,163,90,0.25);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 8px rgba(201,163,90,0.25); }
+      50% { box-shadow: 0 0 0 18px rgba(201,163,90,0); }
+    }
+    .map-pin-label {
+      background: white;
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--navy-900);
+      box-shadow: 0 8px 24px rgba(13,42,71,0.18);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero Contact" style="min-height:50vh">
+    <div class="art" data-art="contact"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>Contact</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">Parlons-en</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>Composons</span></span><br/>
+        <span class="split-line"><span class="h-italic">votre prochain voyage.</span></span>
+      </h1>
+      <p class="lead mt-6" data-hero-fade>
+        Une idée précise, un rêve flou ou simplement l'envie de partir ?
+        Racontez-nous — nous revenons vers vous sous 24 h ouvrées.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main grid -->
+  <section class="contact-main" data-screen-label="02 Form & infos">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Left: info -->
+        <div class="contact-side" data-reveal>
+          <span class="eyebrow">Nos coordonnées</span>
+          <h2 class="mt-5">
+            On est là<br/>
+            <em>pour vous.</em>
+          </h2>
+          <p class="lead mt-5">
+            Notre équipe répond du lundi au samedi, de 8h à 18h.
+            Pour une réponse rapide, WhatsApp reste le canal le plus efficace.
+          </p>
+
+          <ul class="info-list">
+            <li class="info-row">
+              <span class="ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              </span>
+              <div>
+                <span class="info-label">Adresse</span>
+                <span class="info-value">Immeuble SITRAM · Ankorondrano</span>
+              </div>
+              <span class="info-action">Antananarivo</span>
+            </li>
+            <li class="info-row">
+              <span class="ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+              </span>
+              <div>
+                <span class="info-label">Email</span>
+                <a href="mailto:itravelplanner.mg@gmail.com" class="info-value">itravelplanner.mg@gmail.com</a>
+              </div>
+              <span class="info-action">Sous 24 h</span>
+            </li>
+            <li class="info-row">
+              <span class="ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+              </span>
+              <div>
+                <span class="info-label">Téléphone</span>
+                <a href="tel:+261384086070" class="info-value">+261 38 40 860 70</a>
+              </div>
+              <span class="info-action">Lun – Sam</span>
+            </li>
+            <li class="info-row">
+              <span class="ico">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17 14c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.8-.8 1c-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.1 3 .1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.6-.6 1.9-1.3.2-.6.2-1.2.1-1.3 0-.2-.2-.3-.4-.4zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.3A10 10 0 1 0 12 2z"/></svg>
+              </span>
+              <div>
+                <span class="info-label">WhatsApp</span>
+                <a href="https://wa.me/261376863780" class="info-value">037 686 37 80</a>
+              </div>
+              <span class="info-action">Réponse rapide</span>
+            </li>
+          </ul>
+
+          <div class="social-row">
+            <a href="https://instagram.com/i.travel.planner" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@i.travelplanner" aria-label="TikTok">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 3v2.4a6.6 6.6 0 0 0 4.4 1.7v3.4a9.9 9.9 0 0 1-4.4-1V15a6 6 0 1 1-6-6v3.4a2.6 2.6 0 1 0 2.6 2.6V3z"/></svg>
+            </a>
+            <a href="https://facebook.com/itravelplanner" aria-label="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V7a1 1 0 0 1 1-1h2V3h-3a4 4 0 0 0-4 4v2H8v3h2v9h3v-9h2.4l.6-3H13z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: form -->
+        <form class="form" id="contact-form" data-reveal data-delay="0.1" novalidate>
+          <span class="eyebrow">Demande de devis</span>
+          <h2 class="mt-5">
+            Quelques détails<br/>
+            <span class="h-italic" style="color:var(--gold-600)">et nous composons.</span>
+          </h2>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="f-name">Nom complet</label>
+              <input id="f-name" name="name" type="text" required placeholder="Mialy Rakoto" />
+            </div>
+            <div class="field">
+              <label for="f-email">Email</label>
+              <input id="f-email" name="email" type="email" required placeholder="vous@email.com" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="f-phone">Téléphone</label>
+              <input id="f-phone" name="phone" type="tel" placeholder="+261…" />
+            </div>
+            <div class="field">
+              <label for="f-dest">Destination(s)</label>
+              <select id="f-dest" name="destination">
+                <option value="">Sélectionnez…</option>
+                <option>Madagascar</option>
+                <option>Tanzanie</option>
+                <option>Dubaï</option>
+                <option>Afrique du Sud</option>
+                <option>Singapour</option>
+                <option>Thaïlande</option>
+                <option>Japon</option>
+                <option>Corée du Sud</option>
+                <option>Vietnam</option>
+                <option>Maurice</option>
+                <option>Plusieurs destinations</option>
+                <option>Je ne sais pas encore</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="f-travelers">Voyageurs</label>
+              <select id="f-travelers" name="travelers">
+                <option>1 voyageur</option>
+                <option>2 voyageurs</option>
+                <option>3 – 4 voyageurs</option>
+                <option>Groupe (5+)</option>
+                <option>Famille</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-period">Période souhaitée</label>
+              <input id="f-period" name="period" type="text" placeholder="Ex: juillet 2026" />
+            </div>
+          </div>
+
+          <div class="form-row" style="grid-template-columns:1fr">
+            <div class="field">
+              <label for="f-msg">Parlez-nous de votre projet</label>
+              <textarea id="f-msg" name="message" placeholder="Vos envies, vos contraintes, votre style de voyage…"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <small>En envoyant, vous acceptez d'être recontacté par notre équipe. Vos données restent confidentielles.</small>
+            <button type="submit" class="btn btn-primary">
+              Envoyer ma demande
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="success-msg" id="success">
+            <h3>Merci ! Message envoyé.</h3>
+            <p>Notre équipe revient vers vous sous 24 h ouvrées.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section class="map-block" data-screen-label="03 Carte">
+    <div class="container">
+      <div class="map-frame art" data-art="contact" data-reveal>
+        <div class="map-pin">
+          <div class="map-pin-label">Immeuble SITRAM · Antananarivo</div>
+          <div class="map-pin-dot"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Form submission (mock)
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('contact-form');
+      const success = document.getElementById('success');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = form.querySelector('#f-name').value.trim();
+        const email = form.querySelector('#f-email').value.trim();
+        if (!name || !email) {
+          form.querySelectorAll('[required]').forEach(f => {
+            if (!f.value.trim()) f.style.borderColor = 'var(--gold-600)';
+          });
+          return;
+        }
+        success.classList.add('is-shown');
+        const rect = success.getBoundingClientRect();
+        window.scrollTo({top: window.scrollY + rect.top - 200, behavior: 'smooth'});
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>
