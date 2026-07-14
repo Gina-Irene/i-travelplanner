@@ -1,0 +1,24 @@
+{
+  "name": "i-travelplanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gina-Irene/I-TravelPlanner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Gina-Irene/I-TravelPlanner/issues"
+  },
+  "homepage": "https://github.com/Gina-Irene/I-TravelPlanner#readme",
+  "dependencies": {
+    "resend": "^6.17.2"
+  }
+}
