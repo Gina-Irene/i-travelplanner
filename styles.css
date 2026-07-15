@@ -738,3 +738,16 @@ p { margin: 0 0 1em; }
 .page-hero .breadcrumb a { color: rgba(255,255,255,0.7); }
 .page-hero .breadcrumb a:hover { color: white; }
 .page-hero .breadcrumb .sep { opacity: 0.4; }
+.success-msg{
+    display:none;
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+    background:#dff6e4;
+    color:#146c2e;
+    border:1px solid #9dd9aa;
+}
+
+.success-msg.is-shown{
+    display:block;
+}

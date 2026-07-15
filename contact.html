@@ -422,20 +422,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
 
-      const response = await fetch("/api/contact", {
+    const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-      });
+    });
 
-      if (!response.ok) {
-        throw new Error("Erreur serveur");
-      }
+    const result = await response.json();
 
-      success.classList.add("is-shown");
-      form.reset();
+    console.log("Réponse API :", result);
+
+    if (!response.ok) {
+        alert(result.error || "Erreur");
+        return;
+    }
+
+    alert("Email envoyé !");
+
+    success.classList.add("is-shown");
+
+    form.reset();
+
+} catch (err) {
+
+    console.error(err);
+
+    alert(err.message);
+
+}
+
+console.log(result);
+
+if (!response.ok) {
+    alert(result.error || "Erreur");
+    return;
+}
+
+alert("Email envoyé !");
+
+success.classList.add("is-shown");
+
+form.reset();
 
     } catch (err) {
 
