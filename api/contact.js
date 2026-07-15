@@ -55,15 +55,15 @@ export default async function handler(req, res) {
       response
     });
 
-  } catch (error) {
+  catch (error) {
 
-    console.error(error);
+  console.error("ERREUR RESEND :", error);
 
-    return res.status(500).json({
-      success: false,
-      error: error.message
-    });
+  return res.status(500).json({
+    success: false,
+    error
+  });
 
-  }
+}
 
 }
