@@ -402,80 +402,54 @@
   <script src="app.js"></script>
   <script>
 document.addEventListener("DOMContentLoaded", () => {
-
   const form = document.getElementById("contact-form");
   const success = document.getElementById("success");
+  const button = form.querySelector('button[type="submit"]');
 
   form.addEventListener("submit", async (e) => {
-
     e.preventDefault();
 
     const data = {
-      name: document.getElementById("f-name").value,
-      email: document.getElementById("f-email").value,
-      phone: document.getElementById("f-phone").value,
+      name: document.getElementById("f-name").value.trim(),
+      email: document.getElementById("f-email").value.trim(),
+      phone: document.getElementById("f-phone").value.trim(),
       destination: document.getElementById("f-dest").value,
       travelers: document.getElementById("f-travelers").value,
-      period: document.getElementById("f-period").value,
-      message: document.getElementById("f-msg").value
+      period: document.getElementById("f-period").value.trim(),
+      message: document.getElementById("f-msg").value.trim()
     };
 
+    if (!data.name || !data.email) {
+      alert("Merci de renseigner votre nom et votre email.");
+      return;
+    }
+
+    if (button) button.disabled = true;
+
     try {
-
-    const response = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
-    });
+      });
 
-    const result = await response.json();
+      const result = await response.json().catch(() => ({}));
 
-    console.log("Réponse API :", result);
-
-    if (!response.ok) {
-        alert(result.error || "Erreur");
+      if (!response.ok || !result.success) {
+        console.error("Erreur API :", result);
+        alert("Votre demande n'a pas pu être envoyée. Merci de réessayer ou de nous écrire directement par email.");
         return;
-    }
+      }
 
-    alert("Email envoyé !");
-
-    success.classList.add("is-shown");
-
-    form.reset();
-
-} catch (err) {
-
-    console.error(err);
-
-    alert(err.message);
-
-}
-
-console.log(result);
-
-if (!response.ok) {
-    alert(result.error || "Erreur");
-    return;
-}
-
-alert("Email envoyé !");
-
-success.classList.add("is-shown");
-
-form.reset();
-
+      success.classList.add("is-shown");
+      form.reset();
     } catch (err) {
-
-      alert("Une erreur est survenue. Merci de réessayer.");
-
       console.error(err);
-
+      alert("Une erreur est survenue. Merci de réessayer.");
+    } finally {
+      if (button) button.disabled = false;
     }
-
   });
-
 });
 </script>
 </body>
