@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const { data, error } = await resend.emails.send({
       from: "I-Travel Planner <onboarding@resend.dev>",
-      to: "itravelplanner.mg@gmail.com",
+      to: "ginaandriamiharisoa@gmail.com",
       replyTo: email,
       subject: `🌍 Nouvelle demande de devis - ${name}`,
       html: `
