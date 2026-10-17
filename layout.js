@@ -5,7 +5,8 @@
     { href: 'index.html', label: 'Accueil' },
     { href: 'a-propos.html', label: 'Qui sommes-nous' },
     { href: 'destinations.html', label: 'Destinations' },
-    { href: 'madagascar.html', label: 'Madagascar' },
+    { href: 'madagascar.html', label: 'DMC Madagascar' },
+    { href: 'maurice.html', label: 'DMC Maurice' },
     { href: 'galerie.html', label: 'Galerie' },
     { href: 'contact.html', label: 'Contact' },
   ];

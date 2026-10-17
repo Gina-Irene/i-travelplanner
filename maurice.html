@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>I-Travel Planner — DMC Maurice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    .mada-stats {
+      padding: var(--space-7) 0;
+      background: var(--sand-50);
+      border-bottom: 1px solid var(--line-light);
+    }
+    .mada-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    @media (max-width: 700px) { .mada-stats-grid { grid-template-columns: 1fr 1fr; } }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 4vw, 56px);
+      font-style: italic;
+      color: var(--navy-900);
+      line-height: 1;
+      font-variation-settings: "opsz" 144;
+    }
+    .stat-num em { color: var(--gold-600); font-style: italic; }
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .spotlight {
+      padding: var(--space-10) 0;
+      background: var(--sand-100);
+    }
+    .spotlight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    @media (max-width: 900px) { .spotlight-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .spotlight-art {
+      position: relative;
+      aspect-ratio: 4/5;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .spotlight h2 { font-size: clamp(40px, 4.6vw, 64px); line-height: 1.05; }
+    .spotlight h2 em { font-style: italic; color: var(--gold-600); }
+    .spotlight-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--gold-500);
+      color: var(--navy-900);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border-radius: 30px;
+      margin-bottom: 24px;
+    }
+
+    .mada-grid {
+      padding: var(--space-10) 0;
+      background: var(--sand-50);
+    }
+    .mada-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      margin-bottom: 56px;
+      flex-wrap: wrap;
+    }
+    .mada-head h2 { font-size: clamp(36px, 4.6vw, 60px); max-width: 16ch; }
+    .mada-head p { max-width: 40ch; color: var(--ink-700); margin: 0; }
+
+    .mada-list { display: flex; flex-direction: column; gap: 8px; }
+    .mada-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 1.2fr 1fr 160px;
+      gap: 32px;
+      align-items: center;
+      padding: 28px 32px;
+      background: white;
+      border-radius: var(--radius);
+      border: 1px solid var(--line-light);
+      transition: all 0.4s cubic-bezier(.6,.2,.2,1);
+      position: relative;
+      color: var(--ink-900);
+    }
+    .mada-row:hover {
+      background: var(--navy-900);
+      color: white;
+      transform: translateX(8px);
+    }
+    .mada-row:hover h3 { color: white; }
+    .mada-row:hover .mada-art-thumb { transform: scale(1.05); }
+    .mada-row:hover .mada-cta { color: var(--gold-500); }
+    .mada-row:hover .mada-row-num { color: rgba(255,255,255,0.5); }
+
+    @media (max-width: 1100px) {
+      .mada-row { grid-template-columns: 60px 1fr 1.5fr; gap: 24px; }
+      .mada-row > .mada-region, .mada-row > .mada-cta { display: none; }
+    }
+    @media (max-width: 640px) {
+      .mada-row { grid-template-columns: 1fr; gap: 16px; padding: 24px; }
+      .mada-row-num { font-size: 14px; }
+    }
+
+    .mada-row-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--gold-600);
+    }
+    .mada-art-thumb {
+      width: 100px;
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      transition: transform 0.5s;
+    }
+    .mada-row-content h3 {
+      font-size: clamp(20px, 2vw, 28px);
+      line-height: 1.15;
+      margin: 0 0 6px;
+      transition: color 0.3s;
+    }
+    .mada-row-content p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      opacity: 0.7;
+    }
+    .mada-region {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+    .mada-cta {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-self: end;
+      transition: color 0.3s;
+    }
+
+    .seasons {
+      padding: var(--space-9) 0;
+      background: var(--navy-900);
+      color: white;
+    }
+    .seasons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    @media (max-width: 900px) { .seasons-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .seasons-grid { grid-template-columns: 1fr; } }
+    .season {
+      padding: 32px 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .season h4 {
+      color: white;
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    .season .month {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-500);
+      margin-bottom: 16px;
+    }
+    .season p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    .mu-chips{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 40px}
+    .mu-chips a{padding:10px 18px;border:1px solid rgba(0,0,0,.18);border-radius:999px;font-size:14px;text-decoration:none;color:inherit}
+    .mu-chips a:hover{border-color:var(--gold-500)}
+    .mu-cat{margin:48px 0 16px;scroll-margin-top:110px}
+    .mu-cat h3{font-size:clamp(26px,3vw,34px);margin:0 0 6px}
+    .mu-cat p{margin:0;opacity:.7}
+  </style>
+</head>
+<body>
+  <div data-layout="header" data-on-dark="true"></div>
+
+  <section class="page-hero" data-hero-anim data-screen-label="01 Hero Maurice">
+    <div class="art" data-art="maurice"></div>
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Accueil</a><span class="sep">/</span><span>DMC Maurice</span></div>
+      <span class="eyebrow" style="color:var(--gold-500)">DMC Maurice</span>
+      <h1 class="display-1 mt-5">
+        <span class="split-line"><span>Maurice,</span></span><br/>
+        <span class="split-line"><span class="h-italic">l'île sur mesure.</span></span>
+      </h1>
+      <p class="lead mt-6" data-hero-fade>
+        Lagons turquoise, plages de sable blanc, montagnes verdoyantes et
+        table créole : Maurice allie détente et découvertes. Nous organisons
+        sur place votre séjour, de l'accueil à l'aéroport jusqu'au dernier
+        transfert, avec des partenaires locaux de confiance.
+      </p>
+      <div class="mt-7" data-hero-fade style="display:flex;gap:14px;flex-wrap:wrap">
+        <a href="#regions" class="btn btn-gold">
+          Découvrir les activités
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="contact.html" class="btn btn-outline-light">Composer mon voyage</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="mada-stats">
+    <div class="container">
+      <div class="mada-stats-grid" data-reveal-group>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">19 <em>activités</em></span>
+          <span class="stat-label">À vivre sur l'île</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">4 <em>univers</em></span>
+          <span class="stat-label">Mer, ciel, rando, visites</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">2 <em>sites</em></span>
+          <span class="stat-label">Classés à l'UNESCO</span>
+        </div>
+        <div class="stat" data-reveal-item>
+          <span class="stat-num">330 <em>km</em></span>
+          <span class="stat-label">De côtes et lagons</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spotlight -->
+  <section class="spotlight">
+    <div class="container">
+      <div class="spotlight-grid">
+        <div class="spotlight-art art" data-art="maurice" data-art-zoom data-reveal></div>
+        <div data-reveal data-delay="0.1">
+          <span class="spotlight-tag">À ne pas manquer</span>
+          <h2>
+            Le lagon<br/>
+            <em>du Morne.</em>
+          </h2>
+          <p class="lead mt-6">
+            Au pied de la montagne classée UNESCO, le lagon dessine ses
+            fameuses nuances de bleu. Plage, kitesurf, croisière en
+            catamaran ou simple farniente : un décor qui donne le ton
+            de tout le séjour.
+          </p>
+          <div class="mt-6">
+            <a href="contact.html" class="btn btn-outline">
+              Planifier ce moment
+              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Activities -->
+  <section class="mada-grid" id="regions" data-screen-label="02 Activités">
+    <div class="container">
+      <div class="mada-head" data-reveal>
+        <h2>
+          Des activités<br/>
+          <span class="h-italic">pour tous les rythmes.</span>
+        </h2>
+        <p>
+          Mer, ciel, nature ou découvertes : choisissez ce qui vous fait
+          envie, et nous organisons le reste sur place, avec ou sans transferts.
+        </p>
+      </div>
+      <nav class="mu-chips" aria-label="Catégories d'activités"><a href="#mer">Mer & lagon</a><a href="#ciel">Dans les airs</a><a href="#rando">Randonnées</a><a href="#terre">Visites & découvertes</a></nav>
+
+      <div class="mu-cat" id="mer" data-reveal>
+        <h3>Mer & lagon</h3>
+        <p>Croisières, dauphins, baleines et grand large.</p>
+      </div>
+      <div class="mada-list" data-reveal-group>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">01</span>
+          <div class="mada-art-thumb art" data-art="mu-cerfs"></div>
+          <div class="mada-row-content">
+            <h3>Catamaran à l'Île aux Cerfs</h3>
+            <p>Une journée de navigation dans le lagon de la côte Est, jusqu'à l'île la plus emblématique de Maurice. Baignade, snorkeling et détente.</p>
+          </div>
+          <span class="mada-region">Est</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">02</span>
+          <div class="mada-art-thumb art" data-art="mu-dauphins"></div>
+          <div class="mada-row-content">
+            <h3>Dauphins & Île aux Bénitiers</h3>
+            <p>Départ matinal en bateau rapide à la rencontre des dauphins sauvages, puis snorkeling autour de Crystal Rock et de l'Île aux Bénitiers.</p>
+          </div>
+          <span class="mada-region">Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">03</span>
+          <div class="mada-art-thumb art" data-art="mu-troisiles"></div>
+          <div class="mada-row-content">
+            <h3>Croisière des 3 îles</h3>
+            <p>Trois îlots du lagon en une journée : eau turquoise, plages de sable blanc et snorkeling.</p>
+          </div>
+          <span class="mada-region">Lagon</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">04</span>
+          <div class="mada-art-thumb art" data-art="mu-cinqiles"></div>
+          <div class="mada-row-content">
+            <h3>Croisière des 5 îles</h3>
+            <p>Cinq îlots au large de la côte Sud-Est, entre récifs, plages isolées et déjeuner en mer.</p>
+          </div>
+          <span class="mada-region">Sud-Est</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">05</span>
+          <div class="mada-art-thumb art" data-art="mu-baleines"></div>
+          <div class="mada-row-content">
+            <h3>Observation des baleines</h3>
+            <p>Départ de Tamarin à l'aube à la rencontre des cachalots résidents. En groupe, ou en bateau privé jusqu'à 10 personnes.</p>
+          </div>
+          <span class="mada-region">Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">06</span>
+          <div class="mada-art-thumb art" data-art="mu-sousmarin"></div>
+          <div class="mada-row-content">
+            <h3>Sous-marin Blue Safari</h3>
+            <p>Descente à 35 mètres à bord d'un vrai sous-marin : récifs coralliens, poissons tropicaux et épave.</p>
+          </div>
+          <span class="mada-region">Nord</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">07</span>
+          <div class="mada-art-thumb art" data-art="mu-peche"></div>
+          <div class="mada-row-content">
+            <h3>Pêche au gros</h3>
+            <p>Marlin, thon et dorade lors d'une sortie en bateau privé, jusqu'à 10 personnes.</p>
+          </div>
+          <span class="mada-region">Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+      <div class="mu-cat" id="ciel" data-reveal>
+        <h3>Dans les airs</h3>
+        <p>Maurice vue d'en haut.</p>
+      </div>
+      <div class="mada-list" data-reveal-group>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">08</span>
+          <div class="mada-art-thumb art" data-art="mu-helico"></div>
+          <div class="mada-row-content">
+            <h3>Hélicoptère : la cascade sous-marine</h3>
+            <p>Quinze minutes de vol au-dessus de la célèbre « cascade sous-marine », du Morne et du lagon du Sud-Ouest.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">09</span>
+          <div class="mada-art-thumb art" data-art="mu-hydravion"></div>
+          <div class="mada-row-content">
+            <h3>Hydravion : la cascade sous-marine</h3>
+            <p>Un décollage en hydravion pour admirer l'illusion de la cascade sous-marine, côté Est ou au Morne.</p>
+          </div>
+          <span class="mada-region">Est & Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">10</span>
+          <div class="mada-art-thumb art" data-art="mu-parapente"></div>
+          <div class="mada-row-content">
+            <h3>Parapente en tandem</h3>
+            <p>Envol avec un pilote certifié au-dessus de la presqu'île du Morne, pour la plus belle vue de l'île.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+      <div class="mu-cat" id="rando" data-reveal>
+        <h3>Randonnées</h3>
+        <p>Sentiers guidés, nature et panoramas.</p>
+      </div>
+      <div class="mada-list" data-reveal-group>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">11</span>
+          <div class="mada-art-thumb art" data-art="mu-morne"></div>
+          <div class="mada-row-content">
+            <h3>Randonnée du Morne</h3>
+            <p>Ascension guidée de la montagne classée UNESCO, avec un panorama à 360° sur le lagon.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">12</span>
+          <div class="mada-art-thumb art" data-art="mu-cascades"></div>
+          <div class="mada-row-content">
+            <h3>Randonnée des 7 cascades</h3>
+            <p>Marche guidée de cascade en cascade, au cœur de la végétation de l'intérieur de l'île.</p>
+          </div>
+          <span class="mada-region">Centre</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+      <div class="mu-cat" id="terre" data-reveal>
+        <h3>Visites & découvertes</h3>
+        <p>Culture, saveurs et curiosités.</p>
+      </div>
+      <div class="mada-list" data-reveal-group>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">13</span>
+          <div class="mada-art-thumb art" data-art="mu-toursud"></div>
+          <div class="mada-row-content">
+            <h3>Tour du Sud</h3>
+            <p>Terre des Sept Couleurs, cascade de Chamarel, lac sacré de Grand Bassin et Gorges de la Rivière Noire.</p>
+          </div>
+          <span class="mada-region">Sud</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">14</span>
+          <div class="mada-art-thumb art" data-art="mu-tournord"></div>
+          <div class="mada-row-content">
+            <h3>Tour du Nord</h3>
+            <p>Marché central et Caudan Waterfront à Port-Louis, jardin de Pamplemousses et Cap Malheureux.</p>
+          </div>
+          <span class="mada-region">Nord</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">15</span>
+          <div class="mada-art-thumb art" data-art="mu-surmesure"></div>
+          <div class="mada-row-content">
+            <h3>Excursion sur mesure</h3>
+            <p>Journée complète ou demi-journée, en voiture ou en minibus selon votre groupe : vous choisissez les étapes, nous composons le circuit.</p>
+          </div>
+          <span class="mada-region">Toute l'île</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">16</span>
+          <div class="mada-art-thumb art" data-art="mu-casela"></div>
+          <div class="mada-row-content">
+            <h3>Casela World of Adventures</h3>
+            <p>Parc animalier et de loisirs : rencontres avec les animaux et activités d'aventure pour toute la famille.</p>
+          </div>
+          <span class="mada-region">Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">17</span>
+          <div class="mada-art-thumb art" data-art="mu-the"></div>
+          <div class="mada-row-content">
+            <h3>Dégustation de thé</h3>
+            <p>Visite d'une plantation de thé et dégustation des thés de l'île, dans un cadre verdoyant.</p>
+          </div>
+          <span class="mada-region">Sud</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">18</span>
+          <div class="mada-art-thumb art" data-art="mu-rhumerie"></div>
+          <div class="mada-row-content">
+            <h3>Rhumerie de Chamarel</h3>
+            <p>Visite de la distillerie, découverte de la fabrication du rhum à partir de la canne à sucre, puis dégustation.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="contact.html" class="mada-row" data-reveal-item>
+          <span class="mada-row-num">19</span>
+          <div class="mada-art-thumb art" data-art="mu-curious"></div>
+          <div class="mada-row-content">
+            <h3>Curious Corner</h3>
+            <p>Une maison d'illusions d'optique à Chamarel : un lieu ludique et original, idéal en famille.</p>
+          </div>
+          <span class="mada-region">Sud-Ouest</span>
+          <span class="mada-cta">Me renseigner <svg class="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seasons -->
+  <section class="seasons" data-screen-label="03 Saisons">
+    <div class="container">
+      <div data-reveal style="max-width:50ch">
+        <span class="eyebrow" style="color:var(--gold-500)">Quand partir ?</span>
+        <h2 class="mt-5">
+          Maurice<br/>
+          <span class="h-italic">toute l'année.</span>
+        </h2>
+        <p style="color:rgba(255,255,255,0.7);margin-top:24px;max-width:46ch">
+          Le climat reste doux en toute saison. Voici ce qu'il faut
+          savoir pour bien choisir votre période.
+        </p>
+      </div>
+
+      <div class="seasons-grid" data-reveal-group>
+        <div class="season" data-reveal-item>
+          <span class="month">Mai – Déc</span>
+          <h4>Saison fraîche et sèche</h4>
+          <p>La période idéale : temps agréable, peu de pluie, parfaite pour la plage et les visites.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Mai – Oct</span>
+          <h4>Kitesurf & plongée</h4>
+          <p>Vents réguliers pour le kitesurf au Morne et belle visibilité sous l'eau.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Nov – Avr</span>
+          <h4>Été chaud</h4>
+          <p>Mer chaude et journées longues, avec davantage de pluie et d'humidité.</p>
+        </div>
+        <div class="season" data-reveal-item>
+          <span class="month">Jan – Mar</span>
+          <h4>Période cyclonique</h4>
+          <p>Risque de cyclones et de fortes pluies. Nous conseillons des dates flexibles à cette période.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="container">
+      <div class="final-cta-card" data-reveal>
+        <div>
+          <span class="eyebrow" style="color:var(--gold-500)">Maurice sur mesure</span>
+          <h2 class="mt-4" style="color:white">
+            Composez<br/>
+            <span class="h-italic">votre itinéraire idéal.</span>
+          </h2>
+          <p class="mt-4">
+            Combinez plusieurs régions, ajustez le rythme, ajoutez des expériences
+            uniques. Nous orchestrons tout — hébergements, activités,
+            guides locaux, transferts.
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <a href="contact.html" class="btn btn-gold">
+            Demander un devis
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://wa.me/261376863780" class="btn btn-outline-light">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 14c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.8-.8 1c-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.3-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.5l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.1 3 .1.2 2 3 4.8 4.2.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.6-.6 1.9-1.3.2-.6.2-1.2.1-1.3 0-.2-.2-.3-.4-.4zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.3A10 10 0 1 0 12 2z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-layout="footer"></div>
+
+  <script src="placeholders.js"></script>
+  <script src="layout.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

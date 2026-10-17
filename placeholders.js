@@ -321,6 +321,10 @@
   }
 
   function htmlFor(key) {
+    // Activités de Maurice : photo uploads/maurice-<nom>.jpg si elle existe, sinon photo de repli
+    if (key.indexOf('mu-') === 0) {
+      return `<img src="uploads/maurice-${key.slice(3)}.jpg" alt="" loading="lazy" onerror="this.onerror=null;this.src='uploads/mauritius.jpg'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"/>`;
+    }
     if (IMG_MAP[key]) {
       return `<img src="${IMG_MAP[key]}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"/>`;
     }
